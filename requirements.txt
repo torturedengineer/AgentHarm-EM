@@ -1,0 +1,14 @@
+inspect_ai
+huggingface_hub
+datasets
+python-dotenv
+
+# Only needed if you go the local-transformers-model route (inspect's `hf/` provider):
+transformers
+accelerate
+peft
+bitsandbytes
+
+# Only needed if you go the vLLM route (needed for serving a LoRA adapter
+# via inspect's `vllm/<base-model>:<adapter-path>` model string):
+# vllm
