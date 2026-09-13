@@ -112,12 +112,21 @@ def main():
         # signal greedy decoding. That's fine for API providers, but the
         # local `hf` provider forwards it straight to transformers'
         # generate(), which crashes on temperature=0.0 unless do_sample is
-        # explicitly turned off — a known transformers quirk, not something
-        # specific to your setup. Passed directly here (NOT wrapped in a
-        # GenerateConfig object — eval_set() builds that internally from
-        # whatever keyword args you give it; passing config=GenerateConfig(...)
-        # is what caused the previous error).
-        temperature=1.0,
+        # explicitly turned off — a known transformers quirk. Kept low
+        # (not 0, not 1.0) since higher temperatures make the model more
+        # likely to emit multiple simultaneous tool calls in one turn —
+        # which Llama-3.1's chat template can't render at all (see
+        # fail_on_error note below).
+        temperature=0.01,
+        # Llama-3.1's official chat template does not support parallel/
+        # multiple tool calls in a single turn (confirmed limitation, not
+        # an Inspect/harness bug — see vLLM's tool-calling docs). AgentHarm's
+        # agent loop can produce such a turn on some behaviors, which
+        # crashes that one sample with TemplateError. Without this,
+        # fail_on_error defaults to True and ONE such sample kills the
+        # entire task. Tolerate a reasonable fraction instead — tune this
+        # once you see how often it actually happens over a full run.
+        fail_on_error=0.4,
         # Retry settings: default is 10 attempts with exponential backoff
         # (30s, 60s, 120s...) — fine once things are working, but wasteful
         # while you're still debugging a real (non-transient) config bug,
