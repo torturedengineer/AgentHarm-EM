@@ -3,6 +3,13 @@ huggingface_hub
 datasets
 python-dotenv
 
+# Pinned: openai>=3.x pulls in a new `httpx2` dependency instead of the
+# standard `httpx` that inspect_ai's OpenAI provider is built on. Installing
+# a newer major version breaks every judge-model call silently (calls fail
+# instantly and retry forever). Don't bump this without confirming
+# compatibility with your installed inspect_ai version first.
+openai==2.54.0
+
 # Only needed if you go the local-transformers-model route (inspect's `hf/` provider):
 transformers
 accelerate
