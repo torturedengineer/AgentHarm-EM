@@ -54,7 +54,7 @@ def main():
     #    (this is what silently killed your last two runs). Don't
     #    `pip install --upgrade openai` again unless you've confirmed the
     #    newer major version is actually supported by your inspect_ai version.
-    run(["pip", "install", "openai==2.54.0"])
+    run(["pip", "install", "openai==3.1.0"])
 
     print("\nBootstrap done.")
     print(f"Scripts (from GitHub): {REPO_DIR}")
