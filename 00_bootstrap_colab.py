@@ -48,13 +48,15 @@ def main():
     if os.path.exists(requirements_path):
         run(["pip", "install", "-r", requirements_path])
 
-    # 5. IMPORTANT: pin openai back down. openai>=3.x pulls in a new `httpx2`
-    #    dependency instead of the standard `httpx` that inspect_ai's OpenAI
-    #    provider is built on — installing it breaks every judge-model call
-    #    (this is what silently killed your last two runs). Don't
-    #    `pip install --upgrade openai` again unless you've confirmed the
-    #    newer major version is actually supported by your inspect_ai version.
-    run(["pip", "install", "openai==3.1.0"])
+    # 5. NOTE ON openai VERSION: this used to hardcode `pip install
+    #    openai==2.54.0` here, which silently overrode whatever you set in
+    #    requirements.txt — that's the exact "why did my edit not take
+    #    effect" confusion from before. Fixed: the version now comes ONLY
+    #    from requirements.txt. Since `inspect_evals` above is cloned fresh
+    #    from `main` each session (not pinned to a release), its openai
+    #    version requirement can change day to day — if you hit an openai
+    #    version error, check requirements.txt and edit the version there,
+    #    not here.
 
     print("\nBootstrap done.")
     print(f"Scripts (from GitHub): {REPO_DIR}")
